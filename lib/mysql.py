@@ -10,10 +10,15 @@ def insert(name, url):
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
 
-    # 使用execute方法执行SQL语句
-    # sql = "INSERT INTO image(name,url) VALUES (s%,s%)" % (name, url)
-    sql = """INSERT INTO image(name,url) VALUES ('a123','http://')""";
-    cursor.execute(sql)
+    # 使用execute方法执行SQL语句，s%不能用单引号
+    sql = """INSERT INTO image(name,url) VALUES ("%s","%s")""" % (name, url)
+    # sql = """INSERT INTO image(name,url) VALUES ('a123','http://')"""
+
+    try:
+        cursor.execute(sql)
+        db.commit()
+    except:
+        db.rollback()
 
     # 使用 fetchone() 方法获取一条数据
     # data = cursor.fetchone()

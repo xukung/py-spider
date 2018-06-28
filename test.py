@@ -38,4 +38,7 @@ arr = r.html.find('.Left_bar .tab_box ul li')
 for li in arr:
     title = li.find('a p')[0].text;
     imageUrl = li.find('a img')[0].attrs['data-original'];
-    save_image(imageUrl, title);
+    # save_image(imageUrl, title);
+
+
+lib.mysql.insert('abc', 'huanqiu');
