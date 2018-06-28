@@ -1,28 +1,40 @@
-#! /usr/bin/env python3
-
 import pymysql
 
 
-def insert(name, url):
-    # 打开数据库连接
-    db = pymysql.connect("localhost", "root", "123456", "spider")
+class MSSQL:
+    def __init__(self, host, user, pwd, db):
+        self.host = host
+        self.user = user
+        self.pwd = pwd
+        self.db = db
 
-    # 使用cursor()方法获取操作游标
-    cursor = db.cursor()
+    def __GetConnect(self):
+        if not self.db:
+            raise (NameError, "没有设置数据库信息")
+        self.conn = pymysql.connect(
+            host=self.host,
+            user=self.user,
+            password=self.pwd,
+            database=self.db,
+            charset="utf8"
+        )
+        cur = self.conn.cursor()
+        if not cur:
+            raise (NameError, "连接数据库失败")
+        else:
+            return cur
 
-    # 使用execute方法执行SQL语句，s%不能用单引号
-    sql = """INSERT INTO image(name,url) VALUES ("%s","%s")""" % (name, url)
-    # sql = """INSERT INTO image(name,url) VALUES ('a123','http://')"""
+    def ExecQuery(self, sql):
+        cur = self.__GetConnect()
+        cur.execute(sql)
+        resList = cur.fetchall()
 
-    try:
-        cursor.execute(sql)
-        db.commit()
-    except:
-        db.rollback()
+        # 查询完毕后必须关闭连接
+        self.conn.close()
+        return resList
 
-    # 使用 fetchone() 方法获取一条数据
-    # data = cursor.fetchone()
-    # print(data);
-
-    # 关闭数据库连接
-    db.close()
+    def ExecNonQuery(self, sql):
+        cur = self.__GetConnect()
+        cur.execute(sql)
+        self.conn.commit()
+        self.conn.close()
