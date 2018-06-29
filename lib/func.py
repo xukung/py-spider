@@ -1,4 +1,6 @@
 import os
+import random
+import string
 
 
 class Func:
@@ -15,3 +17,6 @@ class Func:
         else:
             # print(path + ' 目录已存在')
             return False
+
+    def randomId(size=16, chars=string.ascii_letters + string.digits):
+        return ''.join(random.choice(chars) for _ in range(size))
