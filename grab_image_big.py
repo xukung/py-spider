@@ -1,16 +1,12 @@
 #! /usr/bin/env python3
 
 from requests_html import HTMLSession
-from lib.mysql import MSSQL
 from lib.func import Func
 
-import requests
-import time
-
 session = HTMLSession()
-ms = MSSQL(host="localhost", user="root", pwd="123456", db="spider")
-list_max_num = 3  # 列表最大数量
+func = Func()
 
+list_max_num = 3  # 列表最大数量
 siteList = [
     # {
     #     'pages': [
@@ -24,7 +20,7 @@ siteList = [
 
     {
         'pages': [
-            'http://soso.nipic.com/?q=%E8%8C%B6%E9%81%93',
+            'http://soso.nipic.com/?q=%E8%8C%B6%E9%81%93&page=2',
         ],
         'listPath': 'ul#img-list-outer li',
         'bigPicPath': '.works-show #static img.works-img',
@@ -34,24 +30,10 @@ siteList = [
 ]
 
 
-# 保存图片到目录
-def save_image(img_src):
-    newName = Func.randomId()
-    curDate = time.strftime('%Y%m%d', time.localtime())
-    newPath = './download/image/' + curDate + '/'
-    Func.createPath(newPath)
-    ms.ExecNonQuery("""INSERT INTO image(name,source) VALUES ("%s","%s")""" % (newName, img_src))
-
-    img_response = requests.get(img_src)
-    with open(newPath + newName + '.jpg', 'wb') as file:
-        file.write(img_response.content)
-        print(img_src, newName, ' 保存成功！')
-
-
 def find_big_image(page_url, big_pic_path, next_link_path):
     r = session.get(page_url)
     bigPicSrc = r.html.find(big_pic_path)[0].attrs['src']
-    save_image(bigPicSrc)
+    func.save_image(bigPicSrc)
 
     # 递归开始查找下一页
     if r.html.find(next_link_path):
