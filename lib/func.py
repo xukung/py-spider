@@ -3,6 +3,7 @@ import random
 import string
 import requests
 import time
+import imgspy
 
 from .mysql import MSSQL
 
@@ -16,7 +17,7 @@ class Func:
         isExists = os.path.exists(path)
         if not isExists:
             os.makedirs(path)
-            print(path + ' 创建成功！')
+            print(path + ' 文件夹创建成功！')
             return True
         else:
             # print(path + ' 目录已存在')
@@ -28,7 +29,8 @@ class Func:
 
     # 保存图片到目录
     def save_image(self, img_src):
-        new_name = self.random_str() + '.jpg'
+        image_info = imgspy.info(img_src)
+        new_name = self.random_str() + '.' + image_info['type']
         cur_date = time.strftime('%Y%m%d', time.localtime())
         new_path = './download/image/' + cur_date + '/'
         self.createPath(new_path)

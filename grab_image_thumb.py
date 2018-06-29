@@ -6,7 +6,7 @@ from lib.func import Func
 session = HTMLSession()
 func = Func()
 
-list_max_num = 5  # 列表最大数量
+list_max_num = 3  # 列表最大数量
 siteList = [
     # {
     #     'pages': [

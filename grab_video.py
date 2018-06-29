@@ -9,7 +9,8 @@ func = Func()
 siteList = [
     {
         'pages': [
-            'http://v.huanqiu.com/observation/2018-06/12374053.html',
+            'http://v.huanqiu.com/observation/2018-06/12374087.html',
+            'http://v.huanqiu.com/guoji/2018-02/11620071.html',
         ],
         'path': '.con_left #vt-video',
         'attr': 'src',
