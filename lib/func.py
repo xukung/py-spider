@@ -27,6 +27,18 @@ class Func:
     def random_str(self, size=16, chars=string.ascii_letters + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
+    # 保存新闻
+    def save_news(self, title, content, source_id, source):
+        ms = MSSQL(host="localhost", user="root", pwd="123456", db="spider")
+        rows = ms.ExecQuery("""SELECT id from news WHERE source_id="%s" """ % (source_id))
+        # print('rows length:', len(rows))
+        if len(rows) > 0:
+            print(title + ' --已存在！')
+        else:
+            ms.ExecNonQuery("""INSERT INTO news(title,content,source_id,source) VALUES ("%s","%s","%s","%s")""" % (
+                title, content, source_id, source))
+            print(title + ' --保存成功')
+
     # 保存图片到目录
     def save_image(self, img_src):
         image_info = imgspy.info(img_src)
@@ -41,7 +53,7 @@ class Func:
         img_response = requests.get(img_src)
         with open(new_path + new_name, 'wb') as file:
             file.write(img_response.content)
-            print(img_src, ' 保存成功！')
+            print(img_src, ' --保存成功！')
 
     def save_video(self, video_src):
         new_name = self.random_str() + '.mp4'
@@ -55,4 +67,4 @@ class Func:
         img_response = requests.get(video_src)
         with open(new_path + new_name, 'wb') as file:
             file.write(img_response.content)
-            print(video_src, ' 保存成功！')
+            print(video_src, ' --保存成功！')
